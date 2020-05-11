@@ -8,6 +8,13 @@ import Messages from '../../components/Messages/Messages'
 
 let socket
 
+let currentMessages = []
+
+let messageIndex
+
+let open = {}
+
+let userName
 const Chat = ({ location }) => {
 
     const [name, setName] = useState('');
@@ -16,7 +23,10 @@ const Chat = ({ location }) => {
     const [message, setMessage] = useState('')
     const [messages, setMessages] = useState([ ])
 
-    const ENDPOINT = 'localhost:5000'
+    
+
+    const ENDPOINT = 'https://realchat-0.herokuapp.com'
+    //const ENDPOINT = 'http://localhost:5000'
 
 
     useEffect(() => {
@@ -27,8 +37,11 @@ const Chat = ({ location }) => {
         setName(name)
         setRoom(room)
 
-        socket.emit('join', {name, room}, () => {
-           
+        userName = name
+
+
+        socket.emit('join', {name, room}, () => {   
+            
         })
 
         return () => {
@@ -42,28 +55,89 @@ const Chat = ({ location }) => {
 
     const sendMessage = (event) => {
         event.preventDefault()
-
-        console.log(messages)
-
         if(message){
+            console.log(message)
             socket.emit('sendMessage', message, () => {
                 setMessage('')
             })
         }
     }
+    
+    const updateMessages = (message) => {
+        
+        
+        if(message.text.length >= 1 && !open[message.user]){
+            messageIndex = currentMessages.length
+            console.log(messageIndex)
+            
+            
+            setMessages([...currentMessages,  message ]);
+            open[message.user] = true
+            
+        }
+        else if(message.text.length < 1 && open[message.user]){
+            message.text.trim()
+            currentMessages.pop()
+
+            setMessages([...currentMessages]);
+            open[message.user] = false
+            
+        }
+        else if(open[message.user]){
+            message.text.trim()
+
+            currentMessages.reverse()
+
+            let msg = currentMessages.find(msg => {
+                console.log(msg)
+                console.log(userName)
+                if(msg.user === message.user)
+                return(msg)
+            })
+
+            currentMessages[currentMessages.indexOf(msg)] = message
+
+            currentMessages.reverse()
+
+            console.log(currentMessages)
+            setMessages([...currentMessages]);
+            
+        }
+    }
+
+    useEffect(() => {
+
+        socket.emit('showMessage', (message), () => {
+            
+        })
+        //console.log('this was called')
+
+    }, [message])
+
+    currentMessages = messages
+
+    useEffect(() => {
+        socket.on('liveEdit', (message) => {
+            //console.log('message being updated')
+            updateMessages(message)
+            
+        })
+    }, [])
+    
 
     useEffect(() => {
         socket.on('message', message => {
+            
+            if(message.text.trim() !== ''){
+                
           setMessages(messages => [ ...messages, message ]);
+            }
         });
         
-        // socket.on("roomData", ({ users }) => {
-        //   setUsers(users);
-        // });
+    
     }, []);
 
 
-    console.log(messages, message)
 
     return(
         <div className="outerContainer">
@@ -71,7 +145,6 @@ const Chat = ({ location }) => {
                 <InfoBar room={room} />
                 <Messages messages={messages} name={name}/>
                 <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
-                
             </div>
         </div>
     )
