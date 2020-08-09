@@ -5,9 +5,8 @@ See what everyone is typing in real-time
 
 [Live Website Link](https://real-chat-757a0.firebaseapp.com/)
 
-![gif of Real Chat](realchat.gif) 
-
-
+### Live Chat Between 3 Users
+![gif of Real Chat](media/realchat.gif) 
 
 ## Technologies used:
 
@@ -19,6 +18,14 @@ See what everyone is typing in real-time
 ### Frontend
 * React
 * React Hooks
+
+### Join Page
+![screenshot of Real Chat Join Page](media/joinSC.png) 
+
+### Chat Page
+![screenshot of Real Chat](media/chatSC.png) 
+
+
 
 
 
