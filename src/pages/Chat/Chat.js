@@ -95,20 +95,22 @@ const Chat = ({ location }) => {
     }
   };
 
-  // web-socket event when a modification in the local message (message that user is typing) is detected
+  // sends real-time typed letters to server
   useEffect(() => {
     socket.emit("showMessage", message, () => {});
   }, [message]);
 
   currentMessages = messages;
 
-  // web-socket event that 
+  // recieves real-time typed letters to render
   useEffect(() => {
     socket.on("liveEdit", (message) => {
     updateMessages(message);
     });
   }, []);
 
+
+  // recieves sent messages from server
   useEffect(() => {
     socket.on("message", (message) => {
       if (message.text.trim() !== "") {

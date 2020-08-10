@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import Button from '@material-ui/core/Button';
+import Button from "@material-ui/core/Button";
 
 import "./Join.css";
 
@@ -13,9 +13,8 @@ export default function Join() {
     <div className="joinOuterContainer">
       <div className="joinInnerContainer">
         <h2 className="heading">Welcome To REAL CHAT!</h2>
-        
+
         <h1 className="subhead">JOIN</h1>
-        
 
         <div>
           <input
@@ -25,6 +24,7 @@ export default function Join() {
             onChange={(event) => setName(event.target.value)}
           />
         </div>
+
         <div>
           <select
             placeholder="Select A Chat Room"
@@ -50,9 +50,13 @@ export default function Join() {
         </Link>
 
         <p> </p>
+
         <CopyToClipboard text="https://real-chat-757a0.firebaseapp.com/">
-          <Button color="primary" variant="contained">Copy Invite Link</Button>
+          <Button color="primary" variant="contained">
+            Copy Invite Link
+          </Button>
         </CopyToClipboard>
+        
         <h4 className="subhead">Send your friends an invite link 👆</h4>
       </div>
     </div>
